@@ -1,0 +1,29 @@
+{
+  "name": "graphql_realtime_chat_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TsvirenkoSweet/realtime_chat_angular_express_graphql_subscription.git"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "express",
+    "graphql",
+    "angular"
+  ],
+  "author": "Andrii Tsvirenko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TsvirenkoSweet/realtime_chat_angular_express_graphql_subscription/issues"
+  },
+  "homepage": "https://github.com/TsvirenkoSweet/realtime_chat_angular_express_graphql_subscription#readme",
+  "devDependencies": {
+    "yarn": "^1.22.19"
+  }
+}
