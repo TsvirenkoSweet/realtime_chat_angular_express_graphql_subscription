@@ -42,7 +42,9 @@
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "graphql": "^15.8.0",
+    "graphql-ws": "^5.11.1",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.1.1"
+    "type-graphql": "^1.1.1",
+    "ws": "^8.8.1"
   }
 }
