@@ -17,7 +17,7 @@ const startApolloServer = async () => {
     const app = express();
     const httpServer = createServer(app);
 
-    app.use(cors({ origin: [`http://localhost:${process.env.PORT}`, "https://studio.apollographql.com"], credentials: true }));
+    app.use(cors({ origin: [`http://localhost:${process.env.PORT}`, `http://localhost:4200`, "https://studio.apollographql.com"], credentials: true }));
 
     const wsServer = new WebSocketServer({
         server: httpServer,
