@@ -1,117 +1,37 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { RetrieveMessagesService } from '../shared/retrieve-messages.service';
-import { ApolloQueryResult } from "@apollo/client/core";
-// import { MessageSubscriptionGQLService } from '../shared/message-subscription-gql.service';
-import { trigger, transition, useAnimation } from '@angular/animations';
-import { newMessageAnimation } from '../shared/new-message.animation';
-
-interface MessageModel {
-  id: string;
-  userId: string;
-  text: string;
-  timestamp: string;
-  fromYou: boolean;
-  user: any;
-}
-
-export interface MessageViewModel {
-  id: string;
-  sent: Date;
-  text: string;
-  user: {
-    name: string;
-    avatarUrl: string;
-    colour: string;
-  };
-  fromYou: boolean;
-  spacer?: Boolean;
-  isNew?: Boolean;
-}
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { ChatService, IMessage } from "../shared/chat.service";
 
 @Component({
   selector: 'app-view-chat',
   templateUrl: './view-chat.component.html',
-  styleUrls: ['./view-chat.component.scss'],
-  animations: [
-    trigger('newMessage', [
-      transition(':enter', [
-        useAnimation(newMessageAnimation)
-      ])
-    ])
-  ]
+  styleUrls: ['./view-chat.component.scss']
 })
 export class ViewChatComponent implements OnInit {
-  messages: Array<MessageViewModel> = [];
+  @ViewChild('scrollBottomEl', { static: false })
+  scrollBottomEl!: ElementRef;
 
-  @Output()
-  messagesUpdatedEvent = new EventEmitter();
+  messages: Array<IMessage> = [];
 
-  constructor(
-    private retrieveMessagesService: RetrieveMessagesService,
-    // private messageSubscriptionGQLService: MessageSubscriptionGQLService
-  ) {}
+  constructor(private chatService: ChatService) {}
 
-  static createMessageInstance(messageData: MessageModel): MessageViewModel {
-    return <MessageViewModel>{
-      ...messageData,
-      sent: new Date(parseInt(messageData.timestamp) * 1000),
-      user: {
-        ...messageData.user,
-        avatarUrl: messageData.user.avatarUrl || 'assets/avatar.png'
-      }
-    };
-  }
+  newChatEvent$ = this.chatService.newChatEvent().subscribe(({ messageSent }) => {
+    if (messageSent) this.messages.push(messageSent);
+    setTimeout(() => {
+      this.scrollToBottom()
+    }, 0);
+  })
 
   ngOnInit() {
-    this.retrieveMessagesService
-      .fetch({ max: 4 })
-      .subscribe((result: ApolloQueryResult<any>) => this.updateMessages(result));
-
-    // this.messageSubscriptionGQLService
-    //   .subscribe()
-    //   .subscribe(this.messageReceived.bind(this));
+    this.chatService.getChats().subscribe(({ getChats }) => {
+      if (getChats) this.messages = getChats.map((x: IMessage) => x);
+    })
   }
 
-  updateMessages(result: ApolloQueryResult<{messages: Array<MessageModel>}>): boolean | void {
-    if (!result || !result.data || !result.data.messages) {
-      return false;
-    }
-
-    this.messages = result.data.messages.map(ViewChatComponent.createMessageInstance).reverse();
-    this.messagesUpdatedEvent.emit();
-  }
-  //
-  // addNewMessage(messageData: any) {
-  //   this.messages.push(
-  //     ViewConversationComponent.createMessageInstance({
-  //       ...messageData,
-  //       isNew: true
-  //     })
-  //   );
-  //
-  //   this.messages.push(
-  //     ViewConversationComponent.createMessageInstance({
-  //       ...messageData,
-  //       spacer: true
-  //     })
-  //   );
-  // }
-
-  onNewMessageAnimated(event: any, newMessageInstance: MessageViewModel) {
-    const spacerInstanceIndex = this.messages.findIndex(message => message.spacer && message.id === newMessageInstance.id);
-
-    if (spacerInstanceIndex > -1) {
-      this.messages.splice(spacerInstanceIndex, 1);
-      newMessageInstance.isNew = false;
-    }
-  }
-
-  messageReceived(result: ApolloQueryResult<{messageAdded: MessageModel}>) {
-    if (!result || !result.data || !result.data.messageAdded) {
-      return;
-    }
-
-    // this.addNewMessage(result.data.messageAdded);
-    this.messagesUpdatedEvent.emit();
+  private scrollToBottom(): void {
+    this.scrollBottomEl.nativeElement.scroll({
+      top: this.scrollBottomEl.nativeElement.scrollHeight,
+      left: 0,
+      behavior: 'smooth'
+    });
   }
 }

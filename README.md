@@ -27,3 +27,8 @@ subscription {
 <li>Run 'create a new chat'</li>
 <li>Subscriptions successfully running</li>
 </ul>
+
+#Frontend
+<ul>
+<li>run ng serve after install all packages</li>
+</ul>

@@ -7,21 +7,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 
 export class MessagesComponent implements OnInit {
-  @ViewChild('containerEl', { static: true })
-  containerEl: any;
-
   constructor() { }
 
   ngOnInit() {
-  }
-
-  scrollToContainerBottom() {
-    setTimeout(() => {
-      this.containerEl.nativeElement.scrollIntoView({
-        behavior: 'auto',
-        block: 'end',
-        inline: 'nearest'
-      });
-    }, 0);
   }
 }

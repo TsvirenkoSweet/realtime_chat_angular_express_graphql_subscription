@@ -1,9 +1,9 @@
-<div class="messages" #containerEl>
+<div class="messages">
   <header class="header">
     <h1>Realtime chat</h1>
   </header>
   <div class="messages__conversation">
-    <app-view-chat (messagesUpdatedEvent)="scrollToContainerBottom()"></app-view-chat>
+    <app-view-chat></app-view-chat>
     <app-create-message></app-create-message>
   </div>
 </div>

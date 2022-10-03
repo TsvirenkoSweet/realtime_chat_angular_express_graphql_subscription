@@ -1,0 +1,24 @@
+.view-conversation {
+  margin-bottom: 12px;
+  &__list {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 500px;
+    height: 500px;
+    overflow-y: scroll;
+  }
+  &__item {
+    border: 1px solid green;
+    padding: 8px 16px;
+    margin: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 0 0 green;
+    transition: 0.3s;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 1px 1px 1px 1px green;
+      transition: 0.3s;
+    }
+  }
+}

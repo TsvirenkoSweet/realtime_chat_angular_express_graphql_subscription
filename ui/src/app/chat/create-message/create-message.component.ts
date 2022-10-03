@@ -1,16 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Apollo, gql } from "apollo-angular";
-import conversationMessageFragment from '../shared/conversation-message-fragment.gql';
-import { Subscription } from "rxjs";
-
-const GET_CHATS = gql`
-      query GetChats {
-          getChats {
-              ...conversationMessage
-          }
-      }
-      ${conversationMessageFragment}
-  `;
+import { ChatService } from "../shared/chat.service";
 
 @Component({
   selector: 'app-create-message',
@@ -18,12 +7,9 @@ const GET_CHATS = gql`
   styleUrls: ['./create-message.component.scss']
 })
 export class CreateMessageComponent implements OnInit {
-  text: String = '';
-  chatIndex = 0;
+  text: string = '';
 
-  private querySubscription: Subscription | undefined;
-
-  constructor(private apollo: Apollo) { }
+  constructor(private chatService: ChatService) {}
 
   ngOnInit() {}
 
@@ -35,40 +21,6 @@ export class CreateMessageComponent implements OnInit {
     const textCache = this.text;
     this.text = '';
 
-    this.apollo
-      .mutate({
-        mutation: gql`
-            mutation createChat {
-              createChat(name: "Chat #${this.chatIndex++}", message: "${textCache.replace('\n', '')}") {
-                ...conversationMessage
-              }
-            }
-            ${conversationMessageFragment}
-          `
-      })
-      .subscribe();
-
-    // this.querySubscription = this.apollo.watchQuery<any>({
-    //   query: GET_CHATS
-    // })
-    //   .valueChanges
-    //   .subscribe((res) => {
-    //     debugger
-    //   });
-    //
-    // this.apollo
-    //   .query({
-    //     query: gql`
-    //       query GetChats {
-    //           getChats {
-    //               ...conversationMessage
-    //           }
-    //       }
-    //       ${conversationMessageFragment}
-    //   `
-    // })
-    //   .subscribe(res => {
-    //     debugger
-    //   });
+    this.chatService.createMessage(textCache).subscribe()
   }
 }
